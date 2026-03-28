@@ -1,0 +1,98 @@
+{
+    "date": "28/03/2026",
+    "subnet": "192.168.1.0/24",
+    "devices": [
+        {
+            "ip": "192.168.1.1",
+            "mac": "AA:BB:CC:11:11:11",
+            "hostname": "router.local",
+            "roles": ["gateway", "dns", "dhcp"],
+            "status": "Up",
+            "services": [
+                {
+                    "port": 80,
+                    "name": "Router Admin",
+                    "protocol": "HTTP"
+                },
+                {
+                    "port": 443,
+                    "name": "Router Admin",
+                    "protocol": "HTTPS"
+                }
+            ]
+        },
+        {
+            "ip": "192.168.1.10",
+            "mac": "AA:BB:CC:22:22:22",
+            "hostname": "truenas.local",
+            "roles": [],
+            "status": "Up",
+            "services": [
+                {
+                    "port": 443,
+                    "name": "TrueNAS",
+                    "protocol": "HTTPS"
+                },
+                {
+                    "port": 22,
+                    "name": "OpenSSH",
+                    "protocol": "SSH"
+                }
+            ]
+        },
+        {
+            "ip": "192.168.1.20",
+            "mac": "AA:BB:CC:33:33:33",
+            "hostname": "proxmox.local",
+            "roles": [],
+            "status": "Down",
+            "services": [
+                {
+                    "port": 8006,
+                    "name": "Proxmox VE",
+                    "protocol": "HTTPS"
+                },
+                {
+                    "port": 22,
+                    "name": "OpenSSH",
+                    "protocol": "SSH"
+                }
+            ]
+        },
+        {
+            "ip": "192.168.1.35",
+            "mac": "AA:BB:CC:44:44:44",
+            "hostname": "",
+            "roles": [],
+            "status": "Unknown",
+            "services": []
+        },
+        {
+            "ip": "192.168.1.50",
+            "mac": "AA:BB:CC:55:55:55",
+            "hostname": "desktop.local",
+            "roles": [],
+            "status": "Up",
+            "services": [
+                {
+                    "port": 22,
+                    "name": "OpenSSH",
+                    "protocol": "SSH"
+                },
+                {
+                    "port": 19999,
+                    "name": "Netdata",
+                    "protocol": "HTTP"
+                }
+            ]
+        },
+        {
+            "ip": "192.168.1.99",
+            "mac": "AA:BB:CC:66:66:66",
+            "hostname": "",
+            "roles": [],
+            "status": "Down",
+            "services": []
+        }
+    ]
+}

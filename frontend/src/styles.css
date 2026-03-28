@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+@font-face {
+    font-family: 'Outfit';
+    src: url("./font/Outfit-VariableFont_wght.ttf");
+}
+
+:root {
+    color-scheme: light, dark;
+    --text-font: 'Outfit','Helvetica Neue', system;
+}
+
+* {
+    font-family: var(--text-font);
+}
+
+body {
+    overflow: hidden;
+}
+
+main {
+    background-image:
+            linear-gradient(to right, rgba(92, 92, 92, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom,rgba(92, 92, 92, 0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-repeat: repeat;
+    overflow: visible;
+}

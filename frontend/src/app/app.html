@@ -1,0 +1,15 @@
+<main class="h-full w-full p-8 not-dark:bg-amber-50 dark:bg-slate-900">
+  <div cdkDrag>
+      @for (device of data.devices; track device.ip) {
+        <app-device 
+          [ip]=device.ip 
+          [mac]=device.mac
+          [status]=device.status
+          [hostname]=device.hostname
+          [services]=device.services>
+        </app-device>
+      }
+      <app-router [subnet]=data.subnet ip="192.168.0.1"></app-router>
+  </div>
+</main>
+<router-outlet />
