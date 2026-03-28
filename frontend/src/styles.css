@@ -16,10 +16,15 @@
     font-family: var(--text-font);
 }
 
+body {
+    overflow: hidden;
+}
+
 main {
     background-image:
             linear-gradient(to right, rgba(92, 92, 92, 0.1) 1px, transparent 1px),
             linear-gradient(to bottom,rgba(92, 92, 92, 0.1) 1px, transparent 1px);
     background-size: 60px 60px;
     background-repeat: repeat;
+    overflow: visible;
 }

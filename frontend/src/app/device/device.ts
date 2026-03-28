@@ -1,5 +1,7 @@
-import { Component, input } from '@angular/core';
-import { Service, IService } from '../service/service';
+import { Component, input, output } from '@angular/core';
+import { Service } from '../service/service';
+import { IService } from '../interfaces/IService';
+import { IPosition } from '../interfaces/IPosition';
 import { CdkDrag } from "@angular/cdk/drag-drop";
 
 @Component({
@@ -9,10 +11,10 @@ import { CdkDrag } from "@angular/cdk/drag-drop";
   styleUrl: './device.css',
 })
 export class Device {
-  ip = input<string>();
-  services: Array<IService> = [
-    {"port": 80, "name": "web server", "status": "active"}
-  ];
-  x = input<number>();
-  y = input<number>();
+  ip = input<string>("unknown");
+  mac = input<string>("unknown");
+  hostname = input<string>("unknown");
+  status = input<string>("Unknown");
+  services = input<Array<IService>>([]);
+  position = output<IPosition>();
 }

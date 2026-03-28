@@ -1,11 +1,18 @@
-<div cdkDrag class="border-purple-700/50 bg-purple-600/60 border w-fit h-fit p-4 rounded-xl shadow-lg cursor-grab m-4 ">
+<div cdkDrag class="border w-fit h-fit p-4 rounded-xl shadow-lg cursor-grab border-white/20 
+    {{status() == 'Up' ? ' bg-green-600/60' : 
+      status() == 'Down' ? 'bg-red-600/60' :
+      'bg-gray-600/60'}}"
+>
     <p><strong>{{ip()}}</strong></p>
+    <p>{{mac()}}</p>
+    <p>{{hostname()}}</p>
+    <p>Status: {{status()}}</p>
     <div class="p-4 grid grid-cols-{{services.length / 2}}">
-        @for(service of services; track service.port){
+        @for(service of services(); track service.port){
             <app-service 
                 port={{service.port}} 
-                name={{service.name}} 
-                status={{service.status}}>
+                [name]=service.name 
+                [status]=service.status>
             </app-service>
         }
     </div>

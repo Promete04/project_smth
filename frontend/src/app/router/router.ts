@@ -8,4 +8,5 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 })
 export class Router {
   subnet = input<string>();
+  ip = input<string>();
 }
