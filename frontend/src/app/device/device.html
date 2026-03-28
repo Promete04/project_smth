@@ -1,13 +1,13 @@
-<div cdkDrag class="border w-fit h-fit p-4 rounded-xl shadow-lg cursor-grab border-white/20 
-    {{status() == 'Up' ? ' bg-green-600/60' : 
-      status() == 'Down' ? 'bg-red-600/60' :
-      'bg-gray-600/60'}}"
+<div cdkDrag (cdkDragMoved)="onDrag()" class="border w-fit h-fit p-4 rounded-xl shadow-lg cursor-grab border-white/20 
+    {{status() == 'Up' ? ' bg-green-600/70' : 
+      status() == 'Down' ? 'bg-red-600/70' :
+      'bg-slate-500/70'}}"
 >
     <p><strong>{{ip()}}</strong></p>
     <p>{{mac()}}</p>
     <p>{{hostname()}}</p>
     <p>Status: {{status()}}</p>
-    <div class="p-4 grid grid-cols-{{services.length / 2}}">
+    <div class="p-4 grid grid-cols-{{services().length > 12? 12 : services().length}}">
         @for(service of services(); track service.port){
             <app-service 
                 port={{service.port}} 

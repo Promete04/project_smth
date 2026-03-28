@@ -18,6 +18,14 @@
 
 body {
     overflow: hidden;
+
+    & * {
+        z-index: 1;
+    }
+}
+
+svg {
+    z-index: 0;
 }
 
 main {

@@ -1,4 +1,4 @@
-<div cdkDrag class="text-center cursor-grab w-fit h-fit dark:text-amber-50 not-dark:text-slate-950">
+<div cdkDrag (cdkDragMoved)="onDrag()" class="text-center cursor-grab w-fit h-fit dark:text-amber-50 not-dark:text-slate-950">
     <p><strong>{{subnet()}}</strong></p>
     <p class="mb-2">{{ip()}}</p>
     <div class="rounded-full bg-slate-500 w-fit h-fit p-6 shadow-lg">
