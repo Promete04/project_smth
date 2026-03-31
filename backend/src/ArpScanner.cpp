@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cmath>
 #include <cstdio>
 #include <stdexcept>
 #include <cerrno>
@@ -189,6 +190,11 @@ std::vector<Device> ArpScanner::scan() {
     uint8_t srcIp[4];
     uint8_t netmask[4];
 
+
+    uint8_t networkBase[4];
+    uint8_t broadcast[4];
+
+
     if (!getInterfaceInfo(srcMac, srcIp, netmask)) {
         throw std::runtime_error("Could not get interface info: " + iface_);
     }
@@ -203,16 +209,56 @@ std::vector<Device> ArpScanner::scan() {
 
     int sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
     if (sockfd < 0) {
-        throw std::runtime_error("Failed to open raw socket.");
+        throw std::runtime_error(std::string("Failed to open raw socket: ") + std::strerror(errno));
     }
 
+    for (int i = 0; i < 4; ++i) {
+        networkBase[i] = static_cast<uint8_t>(srcIp[i] & netmask[i]);
+        broadcast[i] = static_cast<uint8_t>(networkBase[i] | static_cast<uint8_t>(~netmask[i]));
+    }
 
-    
-    uint8_t targetIp[4];
+    printf("Network base: ");
+    printIp(networkBase);
+    printf("  Broadcast: ");
+    printIp(broadcast);
+    printf("\n");
 
-    for (int i = 1; i <= 254; i++) {
+    uint32_t networkInt =
+        (static_cast<uint32_t>(networkBase[0]) << 24) |
+        (static_cast<uint32_t>(networkBase[1]) << 16) |
+        (static_cast<uint32_t>(networkBase[2]) << 8) |
+        static_cast<uint32_t>(networkBase[3]);
+
+    uint32_t broadcastInt =
+        (static_cast<uint32_t>(broadcast[0]) << 24) |
+        (static_cast<uint32_t>(broadcast[1]) << 16) |
+        (static_cast<uint32_t>(broadcast[2]) << 8) |
+        static_cast<uint32_t>(broadcast[3]);
+
+    if (broadcastInt <= networkInt + 1) {
+        close(sockfd);
+        throw std::runtime_error("Subnet has no usable host addresses for ARP scan.");
+    }
+
+    int sent = 0;
+    for (uint32_t host = networkInt + 1; host < broadcastInt; ++host) {
+        uint8_t targetIp[4] = {
+            static_cast<uint8_t>((host >> 24) & 0xFF),
+            static_cast<uint8_t>((host >> 16) & 0xFF),
+            static_cast<uint8_t>((host >> 8) & 0xFF),
+            static_cast<uint8_t>(host & 0xFF)
+        };
+
+        // Skip our own interface address.
+        if (memcmp(targetIp, srcIp, 4) == 0) {
+            continue;
+        }
+
         sendArpRequest(sockfd, targetIp, srcMac, srcIp, netmask);
+        ++sent;
     }
+
+    printf("Requests sent: %d\n", sent);
 
     printf("Requests sent, listening for replies...\n");
 
