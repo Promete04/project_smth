@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+// -------HEADERS-------
+
 struct EthHeader {
     uint8_t  dest[6];
     uint8_t  src[6];
@@ -20,9 +22,17 @@ struct ArpHeader {
     uint8_t  targetIp[4];
 } __attribute__((packed));
 
-struct ArpPacket {
-    EthHeader eth;
-    ArpHeader arp;
+struct Ipv4Header {
+    uint8_t  versionIhl;
+    uint8_t  dscpEcn;
+    uint16_t totalLength;
+    uint16_t identification;
+    uint16_t flagsFragmentOffset;
+    uint8_t  ttl;
+    uint8_t  protocol;
+    uint16_t headerChecksum;
+    uint32_t srcIp;
+    uint32_t dstIp;
 } __attribute__((packed));
 
 struct TcpHeader {
@@ -38,6 +48,45 @@ struct TcpHeader {
 
     /*might add options and payload if
         it becomes necessary*/
+} __attribute__((packed));
+
+struct UdpHeader {
+    uint16_t srcPort;
+    uint16_t destPort;
+    uint16_t length;
+    uint16_t checksum;
+} __attribute__((packed));
+
+struct IcmpHeader {
+    uint8_t  type;
+    uint8_t  code;
+    uint16_t checksum;
+    uint32_t restOfHeader;
+} __attribute__((packed));
+
+// -------PACKAGES-------
+
+struct ArpPacket {
+    EthHeader eth;
+    ArpHeader arp;
+} __attribute__((packed));
+
+struct TcpPacket {
+    EthHeader  eth;
+    Ipv4Header ip;
+    TcpHeader  tcp;
+} __attribute__((packed));
+
+struct UdpPacket {
+    EthHeader  eth;
+    Ipv4Header ip;
+    UdpHeader  udp;
+} __attribute__((packed));
+
+struct IcmpPacket {
+    EthHeader  eth;
+    Ipv4Header ip;
+    IcmpHeader icmp;
 } __attribute__((packed));
 
 
