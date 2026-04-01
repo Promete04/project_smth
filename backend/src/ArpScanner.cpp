@@ -1,25 +1,7 @@
 
 #include "ArpScanner.hpp"
 
-#include <iostream>
-#include <cstring>
-#include <cmath>
-#include <cstdio>
-#include <stdexcept>
-#include <cerrno>
-
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
-#include <net/ethernet.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <linux/if_packet.h>
-#include <linux/if_ether.h>
-#include <unistd.h>
-
 //  Display helpers
-
 static void printIp(const uint8_t ip[4]) {
     printf("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 }

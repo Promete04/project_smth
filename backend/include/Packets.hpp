@@ -24,3 +24,22 @@ struct ArpPacket {
     EthHeader eth;
     ArpHeader arp;
 } __attribute__((packed));
+
+struct TcpHeader {
+    uint16_t srcPort;
+    uint16_t destPort;
+    uint32_t seqNum;
+    uint32_t ackNum;
+    uint8_t  offset_Rsrvd;
+    uint8_t  flags;
+    uint16_t window;
+    uint16_t checksum;
+    uint16_t urgentPtr;
+
+    /*might add options and payload if
+        it becomes necessary*/
+} __attribute__((packed));
+
+
+
+
