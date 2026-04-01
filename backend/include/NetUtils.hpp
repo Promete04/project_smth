@@ -1,15 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <cstring>
-#include <stdexcept>
-
-#include <arpa/inet.h>
-#include <cerrno>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <net/if.h>
-#include <unistd.h>
+#include <string>
 
 struct InterfaceInfo {
     uint8_t mac[6];

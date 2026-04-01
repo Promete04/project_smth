@@ -1,5 +1,17 @@
 #include "NetUtils.hpp"
 
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
+#include <stdexcept>
+
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 uint32_t NetUtils::ipv4ArrayToUint32(const uint8_t ip[4]) {
     return (static_cast<uint32_t>(ip[0]) << 24) |
            (static_cast<uint32_t>(ip[1]) << 16) |
