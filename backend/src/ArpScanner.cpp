@@ -183,18 +183,8 @@ std::vector<Device> ArpScanner::scan() {
     printf("\n");
 
     // Cast the uint8_t arrays to a single uint32_t for simpler iteration
-
-    uint32_t networkInt =
-        (static_cast<uint32_t>(networkBase[0]) << 24) |
-        (static_cast<uint32_t>(networkBase[1]) << 16) |
-        (static_cast<uint32_t>(networkBase[2]) << 8) |
-        static_cast<uint32_t>(networkBase[3]);
-
-    uint32_t broadcastInt =
-        (static_cast<uint32_t>(broadcast[0]) << 24) |
-        (static_cast<uint32_t>(broadcast[1]) << 16) |
-        (static_cast<uint32_t>(broadcast[2]) << 8) |
-        static_cast<uint32_t>(broadcast[3]);
+    uint32_t networkInt = NetUtils::ipv4ArrayToUint32(networkBase);
+    uint32_t broadcastInt = NetUtils::ipv4ArrayToUint32(broadcast);
 
     if (broadcastInt <= networkInt + 1) {
         close(sockfd);
@@ -203,12 +193,8 @@ std::vector<Device> ArpScanner::scan() {
 
     int sent = 0;
     for (uint32_t host = networkInt + 1; host < broadcastInt; ++host) {
-        uint8_t targetIp[4] = {
-            static_cast<uint8_t>((host >> 24) & 0xFF),
-            static_cast<uint8_t>((host >> 16) & 0xFF),
-            static_cast<uint8_t>((host >> 8) & 0xFF),
-            static_cast<uint8_t>(host & 0xFF)
-        };
+        uint8_t targetIp[4];
+        NetUtils::uint32ToIpv4Array(host,targetIp);
 
         // Skip our own interface address.
         if (memcmp(targetIp, srcIp, 4) == 0) {

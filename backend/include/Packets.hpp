@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 
 // -------HEADERS-------
 
@@ -31,8 +32,8 @@ struct Ipv4Header {
     uint8_t  ttl;
     uint8_t  protocol;
     uint16_t headerChecksum;
-    uint32_t srcIp;
-    uint32_t dstIp;
+    uint8_t  srcIp[4];
+    uint8_t  dstIp[4];
 } __attribute__((packed));
 
 struct TcpHeader {
@@ -61,7 +62,8 @@ struct IcmpHeader {
     uint8_t  type;
     uint8_t  code;
     uint16_t checksum;
-    uint32_t restOfHeader;
+    uint16_t identifier;
+    uint16_t sequence;
 } __attribute__((packed));
 
 // -------PACKAGES-------
@@ -89,6 +91,15 @@ struct IcmpPacket {
     IcmpHeader icmp;
 } __attribute__((packed));
 
+namespace NetUtils {
+uint32_t ipv4ArrayToUint32(uint8_t ip[4]);
+void uint32ToIpv4Array(uint32_t ipIn, uint8_t ipOut[4]);
+}
 
+namespace PacketFactory{
+    //ArpPacket createArpPackage();
+    //TcpPacket createTcpPacket();
+    //UdpPacket createUdpPacket();
+    //IcmpPacket createIcmpPacket();
 
-
+}
