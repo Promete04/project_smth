@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DeviceNode.hpp"
+#include "NetUtils.hpp"
 #include "Packets.hpp"
 
 #include <cstdint>
@@ -32,8 +33,6 @@ public:
 
 private:
     std::string iface_;
-
-    bool getInterfaceInfo(uint8_t outMac[6], uint8_t outIp[4], uint8_t netmask[4]);
 
     void sendArpRequest(int sockfd, const uint8_t targetIp[4],
                         const uint8_t srcMac[6], const uint8_t srcIp[4],const uint8_t netmask[4]);

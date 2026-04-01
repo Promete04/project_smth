@@ -17,44 +17,6 @@ ArpScanner::ArpScanner(const std::string& interface)
     : iface_(interface) {}
 
 
-bool ArpScanner::getInterfaceInfo(uint8_t mac[6], uint8_t ip[4],uint8_t netmask[4]) {
-
-    int sock = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock < 0) return false;
-
-    struct ifreq ifr;
-    memset(&ifr, 0, sizeof(ifr));
-    strncpy(ifr.ifr_name, iface_.c_str(), IFNAMSIZ - 1);
-
-    // Get MAC 
-    if (ioctl(sock, SIOCGIFHWADDR, &ifr) < 0) {
-        close(sock);
-        return false;
-    }
-    memcpy(mac, ifr.ifr_hwaddr.sa_data, 6);
-
-    // Get IP 
-    if (ioctl(sock, SIOCGIFADDR, &ifr) < 0) {
-        close(sock);
-        return false;
-    }
-    struct sockaddr_in* addr = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_addr);
-    memcpy(ip, &addr->sin_addr.s_addr, 4);
-
-    if(ioctl(sock, SIOCGIFNETMASK, &ifr) < 0) {
-        close(sock);
-        return false;
-    }
-
-    struct sockaddr_in* mask = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_netmask);
-    memcpy(netmask, &mask->sin_addr.s_addr, 4);
-
-    close(sock);
-    return true;
-}
-
-
-
 void ArpScanner::sendArpRequest(int sockfd,
                                  const uint8_t targetIp[4],
                                  const uint8_t srcMac[6],
@@ -144,26 +106,18 @@ std::vector<Device> ArpScanner::listenForReplies(int sockfd, int timeoutMs) {
 
 
 std::vector<Device> ArpScanner::scan() {
-
-    uint8_t srcMac[6];
-    uint8_t srcIp[4];
-    uint8_t netmask[4];
-
-
+    
     uint8_t networkBase[4];
     uint8_t broadcast[4];
 
-
-    if (!getInterfaceInfo(srcMac, srcIp, netmask)) {
-        throw std::runtime_error("Could not get interface info: " + iface_);
-    }
+    const InterfaceInfo interfaceInfo = NetUtils::getInterfaceInfo(iface_);
 
     printf("Interface: %s  MAC: ", iface_.c_str());
-    printMac(srcMac);
+    printMac(interfaceInfo.mac);
     printf("  IP: ");
-    printIp(srcIp);
+    printIp(interfaceInfo.ip);
     printf("  Netmask  ");
-    printIp(netmask);
+    printIp(interfaceInfo.netmask);
     printf("\n");
 
     int sockfd = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
@@ -172,8 +126,8 @@ std::vector<Device> ArpScanner::scan() {
     }
 
     for (int i = 0; i < 4; ++i) {
-        networkBase[i] = static_cast<uint8_t>(srcIp[i] & netmask[i]);
-        broadcast[i] = static_cast<uint8_t>(networkBase[i] | static_cast<uint8_t>(~netmask[i]));
+        networkBase[i] = static_cast<uint8_t>(interfaceInfo.ip[i] & interfaceInfo.netmask[i]);
+        broadcast[i] = static_cast<uint8_t>(networkBase[i] | static_cast<uint8_t>(~interfaceInfo.netmask[i]));
     }
 
     printf("Network base: ");
@@ -197,11 +151,11 @@ std::vector<Device> ArpScanner::scan() {
         NetUtils::uint32ToIpv4Array(host,targetIp);
 
         // Skip our own interface address.
-        if (memcmp(targetIp, srcIp, 4) == 0) {
+        if (memcmp(targetIp, interfaceInfo.ip, 4) == 0) {
             continue;
         }
 
-        sendArpRequest(sockfd, targetIp, srcMac, srcIp, netmask);
+        sendArpRequest(sockfd, targetIp, interfaceInfo.mac, interfaceInfo.ip, interfaceInfo.netmask);
         ++sent;
     }
 

@@ -91,15 +91,9 @@ struct IcmpPacket {
     IcmpHeader icmp;
 } __attribute__((packed));
 
-namespace NetUtils {
-uint32_t ipv4ArrayToUint32(uint8_t ip[4]);
-void uint32ToIpv4Array(uint32_t ipIn, uint8_t ipOut[4]);
-}
-
 namespace PacketFactory{
     //ArpPacket createArpPackage();
     //TcpPacket createTcpPacket();
     //UdpPacket createUdpPacket();
     //IcmpPacket createIcmpPacket();
-
 }
