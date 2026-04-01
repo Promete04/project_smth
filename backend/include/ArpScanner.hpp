@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "DeviceNode.hpp"
+#include "ArpPacket.hpp"
 
 class ArpScanner {
 public:

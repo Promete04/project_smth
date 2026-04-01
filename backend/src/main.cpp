@@ -14,6 +14,7 @@ int main(int arg, char* argv[]) {
         ArpScanner scanner(argv[1]);
         const auto devices = scanner.scan();
         std::cout << "Discovered devices: " << devices.size() << "\n";
+
     } catch (const std::exception& ex) {
         std::cerr << "Scan failed: " << ex.what() << "\n";
         return 1;
